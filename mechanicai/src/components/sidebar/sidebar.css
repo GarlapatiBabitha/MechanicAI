@@ -86,31 +86,22 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px auto; /* Center horizontally with some spacing */
-    padding: 10px 20px; /* Add padding for a comfortable click area */
-    background-color: #e6eaf1; /* Light background color */
-    color: #555; /* Darker text for contrast */
-    font-size: 14px; /* Adjust font size */
-    font-weight: bold; /* Make the text bold */
-    border: none; /* Remove border */
-    border-radius: 8px; /* Rounded corners */
-    cursor: pointer; /* Change cursor to pointer */
-    transition: background-color 0.3s, color 0.3s; /* Smooth hover effects */
+    margin: 20px auto; 
+    padding: 10px 20px; 
+    background-color: #e6eaf1; 
+    color: #555; 
+    font-size: 14px; 
+    font-weight: bold; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; 
 }
 
 .sidebar .load-more:hover {
-    background-color: #d5dae0; /* Slightly darker background on hover */
-    color: #000; /* Darker text on hover */
+    background-color: #d5dae0; 
+    color: #000;
 }
-
-
-
-
-
-
-
-
-
 
 
 .recent-entry {

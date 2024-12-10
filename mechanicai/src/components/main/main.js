@@ -45,8 +45,11 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
     fetchUserId();
   }, []);
 
-  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
-
+  // const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+  
   const getRandomProblemsForCards = () => {
     const keys = Object.keys(botResponses);
     const randomProblems = [];
