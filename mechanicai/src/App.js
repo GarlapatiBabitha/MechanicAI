@@ -139,6 +139,7 @@ const App = () => {
           alt="Loading..."
           className="loading-gif"
         />
+        <h5>Loading</h5>
       </div>
     );
   }

@@ -60,5 +60,26 @@
   height: 100vh;
   font-size: 1.5rem;
   color: #555;
-  margin-left: 45%;
+  margin-left: 48%;
+}
+
+
+.loading {
+  display: flex; /* Use flexbox for alignment */
+  flex-direction: column; /* Arrange items in a column */
+  align-items: center; /* Center align items horizontally */
+  justify-content: center; /* Center align items vertically */
+  height: 100vh; /* Take full viewport height */
+  text-align: center; /* Center align text */
+}
+
+.loading-gif {
+  width: 100px; /* Adjust the size of the GIF as needed */
+  margin-bottom: 10px; /* Add spacing between the GIF and the text */
+}
+
+.loading h5 {
+  margin: 0; /* Remove default margin if needed */
+  font-size: 18px; /* Adjust font size as needed */
+  color: #555; /* Optional: Change text color */
 }
