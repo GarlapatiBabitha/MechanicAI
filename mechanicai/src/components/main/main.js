@@ -21,7 +21,7 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
   const [sessionId, setSessionId] = useState(null);
   const [userId, setUserId] = useState(null);
   const inputRef = useRef(null);
-
+  const chatRef = useRef(null);
 
   useEffect(() => {
     // Only update messages if there is a previous conversation
@@ -63,6 +63,12 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
     return randomProblems;
   };
 
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages]);
+  
   const handleSend = async () => {
     if (!userId) {
       console.error('User ID is not available');
@@ -182,7 +188,7 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
             </div>
           </>
         ) : (
-          <div className="chat-section">
+          <div className="chat-section" ref={chatRef}>
             {messages.map((message, index) => (
           <div
             key={index}
