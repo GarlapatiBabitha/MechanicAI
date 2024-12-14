@@ -295,3 +295,16 @@
 .dropdown-item:hover {
   background-color: #f0f0f0; /* Light gray hover background */
 }
+
+
+
+.bot-formatted-response {
+  white-space: pre-wrap; /* Ensures line breaks and text wrapping */
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: #333; /* Dark gray for readability */
+  background-color: #f9f9f9; /* Light gray background */
+  padding: 10px;
+  border-radius: 5px;
+  line-height: 1.6;
+}
