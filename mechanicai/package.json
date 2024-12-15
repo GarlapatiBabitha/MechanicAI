@@ -10,6 +10,7 @@
     "appwrite": "^16.0.2",
     "axios": "^1.7.8",
     "bootstrap": "^5.3.3",
+    "framer-motion": "^11.14.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",

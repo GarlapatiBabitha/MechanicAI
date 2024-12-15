@@ -1,5 +1,6 @@
 
 
+
 // import React, { useState, useEffect, useRef } from 'react';
 // import './main.css';
 // import { assets } from '../../assets/assets';
@@ -22,6 +23,8 @@
 //   const chatRef = useRef(null);
 //   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Dropdown visibility
 //   const [userEmail, setUserEmail] = useState(''); // Store logged-in user's email
+//   const [isLoading, setIsLoading] = useState(false); // Add loading state
+
 
 //   useEffect(() => {
 //     if (previousConversation && previousConversation.length > 0) {
@@ -80,6 +83,7 @@
 //       setMessages((prevMessages) => [...prevMessages, newMessage]);
 //       setInput('');
 //       inputRef.current?.focus();
+//       setIsLoading(true);
 
 //       try {
 //         let response;
@@ -106,6 +110,9 @@
 //           { sender: 'bot', text: 'Oops! Something went wrong. Please try again.' },
 //         ]);
 //       }
+//       finally {
+//         setIsLoading(false); // Set loading to false
+//       }
 //     }
 //   };
 
@@ -119,6 +126,7 @@
 
 //     setIsFirstMessageSent(true);
 //     setMessages((prevMessages) => [...prevMessages, { sender: 'user', text: userMessage }]);
+//     setIsLoading(true); 
 
 //     try {
 //       let response;
@@ -143,6 +151,9 @@
 //         ...prevMessages,
 //         { sender: 'bot', text: 'An error occurred. Please try again.' },
 //       ]);
+//     }
+//     finally {
+//       setIsLoading(false); // Set loading to false
 //     }
 //   };
 
@@ -220,6 +231,13 @@
 //                 </div>
 //               </div>
 //             ))}
+//             {isLoading && ( // Display loading message
+//               <div className="message-row bot-row">
+//                 <div className="message bot-message">
+//                   <p>Generating response...</p>
+//                 </div>
+//               </div>
+//             )}
 //           </div>
 //         )}
 
@@ -256,14 +274,6 @@
 
 
 
-
-
-
-
-
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import './main.css';
 import { assets } from '../../assets/assets';
@@ -271,9 +281,14 @@ import botResponses from '../../assets/botResponses.json';
 import axios from 'axios';
 import { account } from '../../appwrite'; // Import the account object from Appwrite.js
 import ReactMarkdown from 'react-markdown';
+import { motion } from 'framer-motion'; // Import framer-motion
 
 const API_URL = 'http://localhost:5000'; // Replace with the backend server URL
 
+const botMessageVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1 } },
+};
 
 const Main = ({ resetChat, onLogout, previousConversation }) => {
   const [input, setInput] = useState('');
@@ -288,7 +303,6 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
   const [userEmail, setUserEmail] = useState(''); // Store logged-in user's email
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
-
   useEffect(() => {
     if (previousConversation && previousConversation.length > 0) {
       setMessages(previousConversation);
@@ -300,7 +314,7 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
     const fetchUserId = async () => {
       try {
         const user = await account.get(); // Fetch the logged-in user from Appwrite
-        setUserEmail(user.email || ''); 
+        setUserEmail(user.email || '');
         setUserId(user?.$id || null); // Save the userId
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -329,10 +343,7 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
     }
   }, [messages]);
 
-  const formatBotResponse = (responseText) => {
-    // Return the response with basic formatting (e.g., trim whitespace)
-    return responseText.trim();
-  };
+  const formatBotResponse = (responseText) => responseText.trim();
 
   const handleSend = async () => {
     if (!userId) {
@@ -351,12 +362,9 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
       try {
         let response;
         if (!sessionId) {
-          // Create a new session for the first message
           response = await axios.post(`${API_URL}/api/new`, { userId, message: input });
-          console.log('New session created with ID:', response.data.sessionId);
           setSessionId(response.data.sessionId); // Save the session ID
         } else {
-          // Use the existing session ID for subsequent messages
           response = await axios.post(`${API_URL}/api/message`, { userId, sessionId, message: input });
         }
 
@@ -372,8 +380,7 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
           ...prevMessages,
           { sender: 'bot', text: 'Oops! Something went wrong. Please try again.' },
         ]);
-      }
-      finally {
+      } finally {
         setIsLoading(false); // Set loading to false
       }
     }
@@ -389,14 +396,12 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
 
     setIsFirstMessageSent(true);
     setMessages((prevMessages) => [...prevMessages, { sender: 'user', text: userMessage }]);
-    setIsLoading(true); 
+    setIsLoading(true);
 
     try {
       let response;
       if (!sessionId) {
-        // Create a new session when clicking a card
         response = await axios.post(`${API_URL}/api/new`, { userId, message: userMessage });
-        console.log('New session created with ID:', response.data.sessionId);
         setSessionId(response.data.sessionId);
       } else {
         response = await axios.post(`${API_URL}/api/message`, { userId, sessionId, message: userMessage });
@@ -414,8 +419,7 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
         ...prevMessages,
         { sender: 'bot', text: 'An error occurred. Please try again.' },
       ]);
-    }
-    finally {
+    } finally {
       setIsLoading(false); // Set loading to false
     }
   };
@@ -481,25 +485,33 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
                 {message.sender === "bot" && (
                   <img src={assets.gemini_icon} alt="Bot Icon" className="message-icon" />
                 )}
-                <div className={`message ${message.sender === "user" ? "user-message" : "bot-message"}`}>
-
-                {message.sender === "bot" ? (
-                  <ReactMarkdown className="bot-formatted-response">
-                    {message.text}
-                  </ReactMarkdown>
-                ) : (
-                  <p>{message.text}</p>
-                )}
-
-                </div>
+                <motion.div
+                  className={`message ${message.sender === "user" ? "user-message" : "bot-message"}`}
+                  variants={message.sender === "bot" ? botMessageVariants : {}}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {message.sender === "bot" ? (
+                    <ReactMarkdown className="bot-formatted-response">
+                      {message.text}
+                    </ReactMarkdown>
+                  ) : (
+                    <p>{message.text}</p>
+                  )}
+                </motion.div>
               </div>
             ))}
-            {isLoading && ( // Display loading message
-              <div className="message-row bot-row">
+            {isLoading && (
+              <motion.div
+                className="message-row bot-row"
+                variants={botMessageVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 <div className="message bot-message">
                   <p>Generating response...</p>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         )}
@@ -526,14 +538,3 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
 };
 
 export default Main;
-
-
-
-
-
-
-
-
-
-
-
