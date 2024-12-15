@@ -335,3 +335,32 @@
 .chat-section::-ms-scrollbar {
   display: none; /* Remove scrollbar */
 }
+
+
+
+
+
+
+
+
+.bot-formatted-response {
+  white-space: pre-wrap; /* Ensures line breaks and text wrapping */
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: #333; /* Dark gray for readability */
+  line-height: 1.6;
+  margin: 0; /* Aligns with the rest of the content */
+  padding: 0; /* Removes the padding to make it appear inline */
+  background: none; /* Removes the background color */
+  border: none; /* Removes the border */
+}
+
+.bot-message {
+  align-self: flex-start;
+  color: #333; /* Dark gray for text */
+  background: none; /* Removes the box background */
+  padding: 0; /* Removes padding */
+  margin: 5px 0; /* Keeps consistent spacing */
+  border: none; /* Removes any border */
+  max-width: none; /* Removes width restriction */
+}
