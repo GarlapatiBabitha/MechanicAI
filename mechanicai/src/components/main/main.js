@@ -1,5 +1,9 @@
 
 
+
+
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import './main.css';
 import { assets } from '../../assets/assets';
@@ -62,8 +66,8 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
   }, [messages]);
 
   const formatBotResponse = (responseText) => {
-    // Transform the bot response to the required format
-    return `Diagnosis:\n${responseText}\n\nInstructions:\n\n1. Find a safe location: Move your vehicle to a level surface, away from traffic.\n2. Turn off the engine: Engage the parking brake.\n3. Gather equipment: Collect the spare tire, lug wrench, and car jack (located in your vehicle's trunk).\n4. Loosen the lug nuts: Before lifting the vehicle, loosen the lug nuts on the flat tire with the lug wrench. Do not remove them yet.\n5. Lift the vehicle: Use the car jack to lift the vehicle until the flat tire is off the ground.\n6. Remove the lug nuts: Completely remove the lug nuts from the wheel hub.\n7. Remove the flat tire: Carefully pull the flat tire straight off the wheel hub and set it aside.\n8. Install the spare tire: Place the spare tire onto the wheel hub, making sure it's securely seated.\n9. Hand tighten the lug nuts: Hand tighten the lug nuts in a star pattern (tightening one lug nut a little, then moving to the next one, and so on).\n10. Lower the vehicle: Carefully lower the vehicle to the ground using the car jack.\n\nTools Required:\n\n- Spare tire\n- Lug wrench\n- Car jack\n\nParts Replacement:\n\n- None required (the spare tire is temporary and meant for emergency use only)\n\nSafety Tips:\n\n- Make sure the parking brake is engaged when changing a tire.\n- Always refer to your vehicle's owner's manual for specific instructions on how to change a tire for your particular vehicle model.\n\nConfirmations:\n\n- Have you checked if the spare tire is properly inflated?\n- Are you comfortable with changing the tire, or would you like me to provide more guidance?`;
+    // Return the response with basic formatting (e.g., trim whitespace)
+    return responseText.trim();
   };
 
   const handleSend = async () => {
@@ -205,8 +209,14 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
                 {message.sender === "bot" && (
                   <img src={assets.gemini_icon} alt="Bot Icon" className="message-icon" />
                 )}
-                                
                 <div className={`message ${message.sender === "user" ? "user-message" : "bot-message"}`}>
+                  {/* {message.sender === "bot" ? (
+                    <pre className="bot-formatted-response">
+                      {message.text}
+                    </pre>
+                  ) : (
+                    <p>{message.text}</p>
+                  )} */}
                   {message.sender === "bot" ? (
                     <pre className="bot-formatted-response">
                       {message.text.replace(/\*/g, "")} {/* Removes all * symbols */}
@@ -215,8 +225,6 @@ const Main = ({ resetChat, onLogout, previousConversation }) => {
                     <p>{message.text}</p>
                   )}
                 </div>
-
-
               </div>
             ))}
           </div>
